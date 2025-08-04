@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de Pacientes</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="scripts.js" defer></script>    
+</head>
+<body>
+    <!-- Seleção de Unidade -->
+    <div id="unitSelection" class="min-h-screen bg-background flex items-center justify-center p-4">
+        <div class="card w-full max-w-md">
+            <div class="card-header text-center">
+                <h1 class="text-2xl font-bold text-primary">Contador de Pacientes</h1>
+                <p class="text-muted-foreground">Selecione sua unidade</p>
+            </div>
+            <div class="card-content space-y-4">
+                <select id="unitSelect" class="select w-full">
+                    <option value="">Escolha sua unidade</option>
+                    <option value="canal">Canal do Cliente</option>
+                </select>
+                <button id="confirmUnitBtn" class="btn btn-primary w-full" disabled>Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interface Principal -->
+    <div id="mainInterface" class="hidden min-h-screen bg-background p-4">
+        <div class="container max-w-6xl mx-auto space-y-6">
+            <!-- Cabeçalho -->
+            <div class="card">
+                <div class="card-content text-center p-6">
+                    <h1 class="text-3xl font-bold text-primary">Contador de Pacientes</h1>
+                    <p id="selectedUnitDisplay" class="text-muted-foreground mt-2"></p>
+                    <div class="text-4xl font-bold text-primary mt-4">
+                        <span id="counterDisplay">0</span>
+                    </div>
+                    <button id="changeUnitBtn" class="btn btn-outline mt-4">Trocar Unidade</button>
+                </div>
+            </div>
+
+            <!-- Botão de Entrada -->
+            <div id="entrySection" class="text-center">
+                <button id="entryBtn" class="btn btn-primary btn-lg">Nova Entrada</button>
+            </div>
+
+            <!-- Seleção de Senha -->
+            <div id="passwordSection" class="hidden card">
+                <div class="card-header">
+                    <h3 class="card-title">Tipo de Senha</h3>
+                </div>
+                <div class="card-content grid grid-cols-2 gap-4">
+                    <button class="btn btn-password-with password-btn" data-password="Com Senha">Com Senha</button>
+                    <button class="btn btn-password-without password-btn" data-password="Sem Senha">Sem Senha</button>
+                </div>
+            </div>
+
+            <!-- Seleção de Tipo de Atendimento -->
+            <div id="serviceSection" class="hidden card">
+                <div class="card-header">
+                    <h3 class="card-title">Tipo de Atendimento</h3>
+                </div>
+                <div class="card-content space-y-4">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <button class="btn btn-outline service-btn" data-service="ORÇAMENTO VACINA">ORÇAMENTO VACINA</button>
+                        <button class="btn btn-outline service-btn" data-service="ORÇAMENTO EXAME">ORÇAMENTO EXAME</button>
+                        <button class="btn btn-outline service-btn" data-service="CADASTRO PACIENTE">CADASTRO PACIENTE</button>
+                        <button class="btn btn-outline service-btn" data-service="NÃO ATENDIDO">NÃO ATENDIDO</button>
+                    </div>
+                    
+                    <div>
+                        <label for="serviceSelect" class="block text-sm font-medium mb-2">Informações e Outros Serviços</label>
+                        <select id="serviceSelect" class="select w-full">
+                            <option value="">Selecione um serviço</option>
+                            <option value="INFORMAÇÕES LC">INFORMAÇÕES LC</option>
+                            <option value="INFORMAÇÕE SGERAIS">INFORMAÇÕE SGERAIS</option>
+                            <option value="INFORMAÇÕES VACINAS">INFORMAÇÕES VACINAS</option>
+                            <option value="INFORMAÇOES EXAMES">INFORMAÇOES EXAMES</option>
+                            <option value="INFORMAÇÕES DE PAGAMENTOS">INFORMAÇÕES DE PAGAMENTOS</option>
+                            <option value="INFORMAÇÕES DE AUTORIZAÇÃO">INFORMAÇÕES DE AUTORIZAÇÃO</option>
+                            <option value="INFORMAÇÃO DE TOXICOLOGICO">INFORMAÇÃO DE TOXICOLOGICO</option>
+                            <option value="INFORMAÇÃO DE TESTE DO PEZINHO">INFORMAÇÃO DE TESTE DO PEZINHO</option>
+                            <option value="INFORMAÇÃO DDE A200">INFORMAÇÃO DDE A200</option>
+                            <option value="INFORMAÇÃO DE TRESP">INFORMAÇÃO DE TRESP</option>
+                            <option value="INFORMAÇÃO DE TSBAC">INFORMAÇÃO DE TSBAC</option>
+                            <option value="INFORMAÇÃO DE SOMMOS">INFORMAÇÃO DE SOMMOS</option>
+                            <option value="INFORMAÇÃO DE PROBIOME">INFORMAÇÃO DE PROBIOME</option>
+                            <option value="CLIENTE SILENCIOSO">CLIENTE SILENCIOSO</option>
+                            <option value="INFO">INFO</option>
+                        </select>
+                        <button id="serviceSelectBtn" class="btn btn-primary w-full mt-2" disabled>Confirmar Serviço</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Pacientes -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Registro de Atendimentos</h3>
+                </div>
+                <div class="card-content">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nº</th>
+                                    <th>Unidade</th>
+                                    <th>Tipo</th>
+                                    <th>Senha</th>
+                                    <th>Hora</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recordsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="noRecords" class="text-center text-muted-foreground py-8">
+                        Nenhum atendimento registrado ainda.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão de Envio -->
+            <div id="submitSection" class="hidden text-center">
+                <button id="submitBtn" class="btn btn-success btn-lg">Enviar Dados Pendentes</button>
+                <div id="submitLoading" class="hidden mt-4">
+                    <div class="spinner"></div>
+                    <p class="text-muted-foreground">Enviando dados...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Atendimento</h3>
+                <button id="closeModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body space-y-4">
+                <div>
+                    <label for="editTipoAtendimento">Tipo de Atendimento</label>
+                    <select id="editTipoAtendimento" class="select w-full">
+                        <option value="ORÇAMENTO VACINA">ORÇAMENTO VACINA</option>
+                        <option value="ORÇAMENTO EXAME">ORÇAMENTO EXAME</option>
+                        <option value="CADASTRO PACIENTE">CADASTRO PACIENTE</option>
+                        <option value="INFORMAÇÕES LC">INFORMAÇÕES LC</option>
+                        <option value="INFORMAÇÕE SGERAIS">INFORMAÇÕE SGERAIS</option>
+                        <option value="INFORMAÇÕES VACINAS">INFORMAÇÕES VACINAS</option>
+                        <option value="INFORMAÇOES EXAMES">INFORMAÇOES EXAMES</option>
+                        <option value="INFORMAÇÕES DE PAGAMENTOS">INFORMAÇÕES DE PAGAMENTOS</option>
+                        <option value="INFORMAÇÕES DE AUTORIZAÇÃO">INFORMAÇÕES DE AUTORIZAÇÃO</option>
+                        <option value="INFORMAÇÃO DE TOXICOLOGICO">INFORMAÇÃO DE TOXICOLOGICO</option>
+                        <option value="INFORMAÇÃO DE TESTE DO PEZINHO">INFORMAÇÃO DE TESTE DO PEZINHO</option>
+                        <option value="INFORMAÇÃO DDE A200">INFORMAÇÃO DDE A200</option>
+                        <option value="INFORMAÇÃO DE TRESP">INFORMAÇÃO DE TRESP</option>
+                        <option value="INFORMAÇÃO DE TSBAC">INFORMAÇÃO DE TSBAC</option>
+                        <option value="INFORMAÇÃO DE SOMMOS">INFORMAÇÃO DE SOMMOS</option>
+                        <option value="INFORMAÇÃO DE PROBIOME">INFORMAÇÃO DE PROBIOME</option>
+                        <option value="CLIENTE SILENCIOSO">CLIENTE SILENCIOSO</option>
+                        <option value="INFO">INFO</option>
+                        
+                    </select>
+                </div>
+                <div>
+                    <label for="editSenha">Tipo de Senha</label>
+                    <select id="editSenha" class="select w-full">
+                        <option value="Com Senha">Com Senha</option>
+                        <option value="Sem Senha">Sem Senha</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+                    <div>
+                        <label class="text-xs">Hora:</label>
+                        <p id="editHoraDisplay"></p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+                    <div>
+                        <label class="text-xs">Unidade:</label>
+                        <p id="editUnidade"></p>
+                    </div>
+                    <div>
+                        <label class="text-xs">Data:</label>
+                        <p id="editData"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelEditBtn" class="btn btn-outline">Cancelar</button>
+                <button id="saveEditBtn" class="btn btn-primary">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
